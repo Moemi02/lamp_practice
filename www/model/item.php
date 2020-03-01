@@ -16,9 +16,9 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-      item_id = ?
+      item_id = :item_id
   ";
-  $params = array($item_id);
+  $params = array(':item_id' => $item_id);
   return fetch_query($db, $sql, $params);
 }
 
@@ -36,10 +36,10 @@ function get_items($db, $is_open = false){
   ';
   if($is_open === true){
     $sql .= '
-      WHERE status = ?
+      WHERE status = :1
     ';
   }
-  $params = array(1);
+  $params = array(':1' => 1);
   return fetch_all_query($db, $sql, $params);
 }
 
@@ -82,9 +82,15 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
         image,
         status
       )
-    VALUES('?', ?, ?, '?', ?);
+    VALUES(':name', :price, :stock, ':filename', :status_value);
   ";
-  $params = array($name, $price, $stock, $filename, $status_value);
+  $params = array(
+    ':name' => $name,
+    ':price' => $price,
+    ':stock' => $stock,
+    ':filename' => $filename,
+    ':status_value' => $status_value
+  );
   return execute_query($db, $sql, $params);
 }
 
@@ -93,12 +99,15 @@ function update_item_status($db, $item_id, $status){
     UPDATE
       items
     SET
-      status = ?
+      status = :status
     WHERE
-      item_id = ?
+      item_id = :item_id
     LIMIT 1
   ";
-  $params = array($status, $item_id);
+  $params = array(
+    ':status' => $status,
+    ':item_id' => $item_id
+  );
   return execute_query($db, $sql, $params);
 }
 
@@ -107,12 +116,15 @@ function update_item_stock($db, $item_id, $stock){
     UPDATE
       items
     SET
-      stock = ?
+      stock = :stock
     WHERE
-      item_id = ?
+      item_id = :item_id
     LIMIT 1
   ";
-  $params = array($stock, $item_id);
+  $params = array(
+    ':stock' => $stock,
+    ':item_id' => $item_id
+  );
   return execute_query($db, $sql, $params);
 }
 
@@ -136,10 +148,10 @@ function delete_item($db, $item_id){
     DELETE FROM
       items
     WHERE
-      item_id = ?
+      item_id = :item_id
     LIMIT 1
   ";
-  $params = array($item_id);
+  $params = array(':item_id' => $item_id);
   return execute_query($db, $sql, $params);
 }
 
