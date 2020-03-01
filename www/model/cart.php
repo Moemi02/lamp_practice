@@ -159,3 +159,4 @@ function validate_cart_purchase($carts){
   return true;
 }
 
+//amountが０以上の整数かチェックする関数があるか？
