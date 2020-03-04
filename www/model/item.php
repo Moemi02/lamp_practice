@@ -36,11 +36,10 @@ function get_items($db, $is_open = false){
   ';
   if($is_open === true){
     $sql .= '
-      WHERE status = :1
+      WHERE status = 1
     ';
   }
-  $params = array(':1' => 1);
-  return fetch_all_query($db, $sql, $params);
+  return fetch_all_query($db, $sql);
 }
 
 function get_all_items($db){
@@ -82,7 +81,7 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
         image,
         status
       )
-    VALUES(':name', :price, :stock, ':filename', :status_value);
+    VALUES(:name, :price, :stock, :filename, :status_value);
   ";
   $params = array(
     ':name' => $name,
