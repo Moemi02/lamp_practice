@@ -19,4 +19,7 @@ if(is_admin($user) === false){
 }
 
 $items = get_all_items($db);
+
+$csrf_token = get_csrf_token();
+//modelから持ってくるときget_という名称、viewで使うものを変数に
 include_once VIEW_PATH . '/admin_view.php';

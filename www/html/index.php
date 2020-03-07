@@ -25,5 +25,7 @@ $user = get_login_user($db);
 // 商品一覧用の商品データを取得
 $items = get_open_items($db);
 
+$csrf_token = get_csrf_token();
+//modelから持ってくるときget_という名称、viewで使うものを変数に
 // ビューの読み込み。
 include_once VIEW_PATH . 'index_view.php';

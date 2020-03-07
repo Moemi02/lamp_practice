@@ -18,4 +18,7 @@ $carts = get_user_carts($db, $user['user_id']);
 
 $total_price = sum_carts($carts);
 
+$csrf_token = get_csrf_token();
+//modelから持ってくるときget_という名称、viewで使うものを変数に
+
 include_once VIEW_PATH . 'cart_view.php';
