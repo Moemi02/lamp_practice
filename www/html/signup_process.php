@@ -9,6 +9,13 @@ if(is_logined() === true){
   redirect_to(HOME_URL);
 }
 
+$csrf_token = get_post('csrf_token');
+
+if(is_valid_csrf_token($csrf_token) === false){
+  set_error('不正なアクセスです。');
+  redirect_to(SIGNUP_URL);
+}
+
 $name = get_post('name');
 $password = get_post('password');
 $password_confirmation = get_post('password_confirmation');

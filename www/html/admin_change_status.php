@@ -10,6 +10,13 @@ if(is_logined() === false){
   redirect_to(LOGIN_URL);
 }
 
+$csrf_token = get_post('csrf_token');
+
+if(is_valid_csrf_token($csrf_token) === false){
+  set_error('不正なアクセスです。');
+  redirect_to(ADMIN_URL);
+}
+
 $db = get_db_connect();
 
 $user = get_login_user($db);
