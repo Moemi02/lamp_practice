@@ -113,6 +113,19 @@ function delete_cart($db, $cart_id){
   return execute_query($db, $sql, $params);
 }
 
+function order_transaction($db, $carts){
+  $db->beginTransaction();
+  if(purchase_carts($db, $carts)
+    && insert_order($db, $carts[0]['user_id'], $carts['item_id'], $carts['price'], $carts['amount'])){
+      //商品在庫を減らす処理はpurchase_carts関数に含まれているからトランザクション処理はいらない？
+      //insert_order_detail関数の処理もinsert_order関数に含まれているからいらない？
+    $db->commit();
+    return true;
+  }
+  $db->rollback();
+  return false;
+}
+
 function purchase_carts($db, $carts){
   if(validate_cart_purchase($carts) === false){
     return false;
@@ -126,8 +139,43 @@ function purchase_carts($db, $carts){
       set_error($cart['name'] . 'の購入に失敗しました。');
     }
   }
-  
+  insert_order($db, $carts[0]['user_id'], $carts['item_id'], $carts['price'], $carts['amount']);
+  //商品が複数個だとどう処理すれば？
   delete_user_carts($db, $carts[0]['user_id']);
+}
+
+function insert_order($db, $user_id, $item_id, $ordered_price, $ordered_amount){
+  $sql = "
+  INSERT INTO
+    orders(user_id)
+    VALUES (:user_id);
+  ";
+  $params = array(
+    ':user_id' => $user_id
+  );
+  return execute_query($db, $sql, $params);
+  //execute_query関数でいいのか？  
+
+  $order_id = $db->lastInsertId('order_id');
+
+  insert_order_detail($db, $order_id, $item_id, $ordered_price, $ordered_amount);
+  //購入商品が複数の場合はどうしたら？
+}
+
+function insert_order_detail($db, $order_id, $item_id, $ordered_price, $ordered_amount){
+  $sql = "
+  INSERT INTO
+    order_details(order_id, item_id, ordered_price, ordered_amount)
+    VALUES (:order_id, :item_id, :ordered_price, :ordered_amount);
+  ";
+  $params = array(
+    ':order_id' => $order_id,
+    ':item_id' => $item_id,
+    ':ordered_price' => $ordered_price,
+    ':ordered_amount' => $ordered_amount
+  );
+  return execute_query($db, $sql, $params);
+  //execute_query関数でいいのか？  
 }
 
 function delete_user_carts($db, $user_id){
