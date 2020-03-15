@@ -113,21 +113,78 @@ function delete_cart($db, $cart_id){
   return execute_query($db, $sql, $params);
 }
 
+function order_transaction($db, $carts){
+  $db->beginTransaction();
+  if(purchase_carts($db, $carts)){
+      //商品在庫を減らす処理はpurchase_carts関数に含まれているからトランザクション処理はいらない？
+      //insert_order_detail関数の処理もinsert_order関数に含まれているからいらない？
+    $db->commit();
+    return true;
+  }
+  $db->rollback();
+  return false;
+}
+
 function purchase_carts($db, $carts){
   if(validate_cart_purchase($carts) === false){
     return false;
   }
   foreach($carts as $cart){
-    if(update_item_stock(
-        $db, 
-        $cart['item_id'], 
-        $cart['stock'] - $cart['amount']
-      ) === false){
+    if(update_item_stock($db, $cart['item_id'], $cart['stock'] - $cart['amount']) === false){
       set_error($cart['name'] . 'の購入に失敗しました。');
     }
   }
-  
-  delete_user_carts($db, $carts[0]['user_id']);
+  if(insert_order($db, $carts[0]['user_id']) === false){
+    set_error('購入履歴の保存に失敗しました。');
+  }
+  $order_id = $db->lastInsertId('order_id');
+  //商品が複数個だとどう処理すれば？
+  foreach($carts as $cart){
+    if(insert_order_detail($db, $order_id, $cart['item_id'], $cart['price'], $cart['amount']) === false){
+      set_error('購入明細の保存に失敗しました。');
+    }
+  }  
+  if(delete_user_carts($db, $carts[0]['user_id']) === false){
+    set_error('カートの商品の削除に失敗しました。');
+  }
+  if(has_error() === true){
+    return false;
+  }
+  return true;
+}
+
+//$carts['item_id'], $carts['price'], $carts['amount']
+//$item_id, $ordered_price, $ordered_amount
+function insert_order($db, $user_id){
+  $sql = "
+  INSERT INTO
+    orders(user_id)
+    VALUES (:user_id);
+  ";
+  $params = array(
+    ':user_id' => $user_id
+  );
+  return execute_query($db, $sql, $params);
+  //execute_query関数でいいのか？  
+
+  // insert_order_detail($db, $order_id, $item_id, $ordered_price, $ordered_amount);
+  //購入商品が複数の場合はどうしたら？
+}
+
+function insert_order_detail($db, $order_id, $item_id, $ordered_price, $ordered_amount){
+  $sql = "
+  INSERT INTO
+    order_details(order_id, item_id, ordered_price, ordered_amount)
+    VALUES (:order_id, :item_id, :ordered_price, :ordered_amount);
+  ";
+  $params = array(
+    ':order_id' => $order_id,
+    ':item_id' => $item_id,
+    ':ordered_price' => $ordered_price,
+    ':ordered_amount' => $ordered_amount
+  );
+  return execute_query($db, $sql, $params);
+  //execute_query関数でいいのか？  
 }
 
 function delete_user_carts($db, $user_id){

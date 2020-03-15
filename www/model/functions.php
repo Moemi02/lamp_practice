@@ -54,7 +54,7 @@ function get_errors(){
   set_session('__errors',  array());
   return $errors;
 }
-
+//セッションにエラーがある　かつ　１以上ある　なら　true
 function has_error(){
   return isset($_SESSION['__errors']) && count($_SESSION['__errors']) !== 0;
 }
