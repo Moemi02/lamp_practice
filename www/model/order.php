@@ -72,3 +72,22 @@ function get_all_orders($db){
   ';
   return fetch_all_query($db, $sql);
 }
+
+function get_order($db, $order_id){
+  $sql = '
+    SELECT
+      orders.order_id,  
+      orders.created,
+      SUM(order_details.ordered_price * order_details.ordered_amount) AS total_price
+    FROM
+      orders
+      INNER JOIN order_details
+      ON orders.order_id = order_details.order_id
+    GROUP BY
+      orders.order_id  
+    HAVING
+      orders.order_id = :order_id
+  ';
+  $params = array(':order_id' => $order_id);
+  return fetch_query($db, $sql, $params);
+}

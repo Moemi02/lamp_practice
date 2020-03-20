@@ -146,23 +146,6 @@ function purchase_carts($db, $carts){
 //$carts['item_id'], $carts['price'], $carts['amount']
 //$item_id, $ordered_price, $ordered_amount
 
-
-function insert_order_detail($db, $order_id, $item_id, $ordered_price, $ordered_amount){
-  $sql = "
-  INSERT INTO
-    order_details(order_id, item_id, ordered_price, ordered_amount)
-    VALUES (:order_id, :item_id, :ordered_price, :ordered_amount);
-  ";
-  $params = array(
-    ':order_id' => $order_id,
-    ':item_id' => $item_id,
-    ':ordered_price' => $ordered_price,
-    ':ordered_amount' => $ordered_amount
-  );
-  return execute_query($db, $sql, $params);
-  //execute_query関数でいいのか？  
-}
-
 function delete_user_carts($db, $user_id){
   $sql = "
     DELETE FROM

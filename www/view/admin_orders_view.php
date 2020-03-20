@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <?php include VIEW_PATH . 'templates/head.php'; ?>
-  <title>購入履歴画面</title>
+  <title>管理者用購入履歴画面</title>
   <link rel="stylesheet" href="<?php print h(STYLESHEET_PATH . 'admin.css'); ?>">
 </head>
 <body>
