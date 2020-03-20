@@ -25,6 +25,6 @@ if(is_admin($user) === false){
 }
 
 //全ての購入履歴を取得する。
-//$orders = get_all_orders($db);
+$all_orders = get_all_orders($db);
 
 include_once VIEW_PATH . '/admin_orders_view.php';

@@ -113,17 +113,7 @@ function delete_cart($db, $cart_id){
   return execute_query($db, $sql, $params);
 }
 
-function order_transaction($db, $carts){
-  $db->beginTransaction();
-  if(purchase_carts($db, $carts)){
-      //商品在庫を減らす処理はpurchase_carts関数に含まれているからトランザクション処理はいらない？
-      //insert_order_detail関数の処理もinsert_order関数に含まれているからいらない？
-    $db->commit();
-    return true;
-  }
-  $db->rollback();
-  return false;
-}
+
 
 function purchase_carts($db, $carts){
   if(validate_cart_purchase($carts) === false){
@@ -155,21 +145,7 @@ function purchase_carts($db, $carts){
 
 //$carts['item_id'], $carts['price'], $carts['amount']
 //$item_id, $ordered_price, $ordered_amount
-function insert_order($db, $user_id){
-  $sql = "
-  INSERT INTO
-    orders(user_id)
-    VALUES (:user_id);
-  ";
-  $params = array(
-    ':user_id' => $user_id
-  );
-  return execute_query($db, $sql, $params);
-  //execute_query関数でいいのか？  
 
-  // insert_order_detail($db, $order_id, $item_id, $ordered_price, $ordered_amount);
-  //購入商品が複数の場合はどうしたら？
-}
 
 function insert_order_detail($db, $order_id, $item_id, $ordered_price, $ordered_amount){
   $sql = "

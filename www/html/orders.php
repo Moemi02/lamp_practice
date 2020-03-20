@@ -11,8 +11,10 @@ require_once '../model/order.php';
 // ログインチェックを行う
 session_start();
 
-if(is_logined() === true){
-  redirect_to(HOME_URL);
+// ログインチェック用関数を利用
+if(is_logined() === false){
+  // ログインしていない場合はログインページにリダイレクト
+  redirect_to(LOGIN_URL);
 }
 
 // PDOを取得
@@ -20,6 +22,6 @@ $db = get_db_connect();
 // PDOを利用してログインユーザーのデータを取得
 $user = get_login_user($db);
 //ログインユーザの購入履歴を取得
-//$orders = get_orders($db);
+$orders = get_orders($db, $user['user_id']);
 
 include_once VIEW_PATH . 'orders_view.php';

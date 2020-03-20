@@ -27,10 +27,10 @@
           <tr>
             <td><?php print h($order['order_id']);?></td>
             <td><?php print h($order['created']); ?></td>
-            <td><?php print h(number_format($order['price'] * $order['amount'])); ?>円</td>
+            <td><?php print h($order['total_price']); ?>円</td>
             <form  method="get">
               <td><input type="submit" value="購入明細表示"></td>
-                  <input type="hidden" name="order_id" value="<?php print $order['order_id']; ?>">
+                  <input type="hidden" name="order_id" value="<?php print h($order['order_id']); ?>">
             </form>  
           </tr>
           <?php } ?>
