@@ -28,7 +28,7 @@
             <td><?php print h($order['order_id']);?></td>
             <td><?php print h($order['created']); ?></td>
             <td><?php print h($order['total_price']); ?>円</td>
-            <form  method="get">
+            <form  method="get" action="order_details.php">
               <td><input type="submit" value="購入明細表示"></td>
                   <input type="hidden" name="order_id" value="<?php print h($order['order_id']); ?>">
             </form>  

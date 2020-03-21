@@ -21,7 +21,13 @@ if(is_logined() === false){
 $db = get_db_connect();
 // PDOを利用してログインユーザーのデータを取得
 $user = get_login_user($db);
-//ログインユーザの購入履歴を取得
-$orders = get_orders($db, $user['user_id']);
+
+if(is_admin($user) === TRUE){
+  //全ての購入履歴を取得する。
+  $orders = get_all_orders($db);
+} else {
+  //ログインユーザの購入履歴を取得
+  $orders = get_orders($db, $user['user_id']);
+}
 
 include_once VIEW_PATH . 'orders_view.php';

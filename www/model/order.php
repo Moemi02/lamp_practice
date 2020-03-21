@@ -83,11 +83,13 @@ function get_order($db, $order_id){
       orders
       INNER JOIN order_details
       ON orders.order_id = order_details.order_id
+    WHERE
+      orders.order_id = :order_id
     GROUP BY
       orders.order_id  
-    HAVING
-      orders.order_id = :order_id
   ';
-  $params = array(':order_id' => $order_id);
+  $params = array(
+    ':order_id' => $order_id,
+  );
   return fetch_query($db, $sql, $params);
 }
