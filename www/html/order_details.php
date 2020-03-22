@@ -22,9 +22,7 @@ if(is_logined() === false){
 $order_id = get_get('order_id');
 
 //バリデーション
-$order_id_regex = '/^[0-9]+$/';
-if (preg_match($order_id_regex, $order_id) === 0 ){
-  set_error('不正なアクセスです。');
+if (is_valid_order_id($order_id) === FALSE){
   redirect_to(ORDER_URL);
 }
 
@@ -35,15 +33,15 @@ $db = get_db_connect();
 $user = get_login_user($db);
 
 //該当の注文番号の購入履歴を取得する。
-$order = get_order($db, $order_id);
+$order = get_order($db, $order_id); 
 
-if(is_admin($user) === TRUE){
-  //全てのユーザの該当の注文番号の購入明細を取得する。
-  $order_details = get_all_order_details($db, $order_id);
-} else {
-  //ログインユーザの購入明細を取得
-  $order_details = get_order_details($db, $order_id, $user['user_id']);
-}
+//該当の購入履歴のユーザIDと、ログインユーザのユーザIDの一致を確認し、異なる場合はエラーメッセージとリダイレクトを行う
+if(is_admin($user) === FALSE && $order['user_id'] !== $user['user_id']){
+  set_error('不正なアクセスです。');
+  redirect_to(ORDER_URL);
+} 
 
+//ログインユーザの購入明細を取得
+$order_details = get_order_details_by_order_id($db, $order_id);
 
 include_once VIEW_PATH . 'order_details_view.php';

@@ -143,9 +143,6 @@ function purchase_carts($db, $carts){
   return true;
 }
 
-//$carts['item_id'], $carts['price'], $carts['amount']
-//$item_id, $ordered_price, $ordered_amount
-
 function delete_user_carts($db, $user_id){
   $sql = "
     DELETE FROM
@@ -184,5 +181,3 @@ function validate_cart_purchase($carts){
   }
   return true;
 }
-
-//amountが０以上の整数かチェックする関数があるか？

@@ -6,8 +6,6 @@ require_once MODEL_PATH . 'db.php';
 function order_transaction($db, $carts){
   $db->beginTransaction();
   if(purchase_carts($db, $carts)){
-      //商品在庫を減らす処理はpurchase_carts関数に含まれているからトランザクション処理はいらない？
-      //insert_order_detail関数の処理もinsert_order関数に含まれているからいらない？
     $db->commit();
     return true;
   }
@@ -26,9 +24,6 @@ function insert_order($db, $user_id){
   );
   return execute_query($db, $sql, $params);
   //execute_query関数でいいのか？  
-
-  // insert_order_detail($db, $order_id, $item_id, $ordered_price, $ordered_amount);
-  //購入商品が複数の場合はどうしたら？
 }
 
 //ログインユーザの注文の新着順にソートした購入履歴を取得する関数
@@ -76,7 +71,8 @@ function get_all_orders($db){
 function get_order($db, $order_id){
   $sql = '
     SELECT
-      orders.order_id,  
+      orders.order_id,
+      orders.user_id,  
       orders.created,
       SUM(order_details.ordered_price * order_details.ordered_amount) AS total_price
     FROM
@@ -92,4 +88,13 @@ function get_order($db, $order_id){
     ':order_id' => $order_id,
   );
   return fetch_query($db, $sql, $params);
+}
+
+function is_valid_order_id($order_id){
+  $is_valid = true;
+  if(is_positive_integer($order_id) === false){
+    set_error('不正なアクセスです。');
+    $is_valid = false;
+  }
+  return $is_valid;
 }

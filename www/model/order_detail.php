@@ -18,44 +18,20 @@ function insert_order_detail($db, $order_id, $item_id, $ordered_price, $ordered_
   //execute_query関数でいいのか？  
 }
 
-function get_all_order_details($db, $order_id){
+function get_order_details_by_order_id($db, $order_id){
   $sql = '
-  SELECT
-    items.name,
-    order_details.ordered_price,
-    order_details.ordered_amount,
-    order_details.ordered_price * order_details.ordered_amount AS sub_total_price
-  FROM
-    items
-    INNER JOIN order_details
-    ON items.item_id = order_details.item_id
-  WHERE
-    order_details.order_id = :order_id
-';
-$params = array(':order_id' => $order_id);
-return fetch_all_query($db, $sql, $params);
-}
-
-function get_order_details($db, $order_id, $user_id){
-  $sql = '
-  SELECT
-    items.name,
-    order_details.ordered_price,
-    order_details.ordered_amount,
-    order_details.ordered_price * order_details.ordered_amount AS sub_total_price
-  FROM
-    items
-    INNER JOIN order_details
-    ON items.item_id = order_details.item_id
-    INNER JOIN orders
-    ON order_details.order_id = orders.order_id
-  WHERE
-    order_details.order_id = :order_id
-    AND orders.user_id = :user_id  
-';
-$params = array(
-  ':order_id' => $order_id,
-  ':user_id' => $user_id
-);
-return fetch_all_query($db, $sql, $params);
+    SELECT
+      items.name,
+      order_details.ordered_price,
+      order_details.ordered_amount,
+      order_details.ordered_price * order_details.ordered_amount AS sub_total_price
+    FROM
+      items
+      INNER JOIN order_details
+      ON items.item_id = order_details.item_id
+    WHERE
+      order_details.order_id = :order_id
+  ';
+  $params = array(':order_id' => $order_id);
+  return fetch_all_query($db, $sql, $params);
 }
