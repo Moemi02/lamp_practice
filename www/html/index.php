@@ -17,13 +17,16 @@ if(is_logined() === false){
   redirect_to(LOGIN_URL);
 }
 
+// 商品の並び替えデータを取得
+$display_item = get_get('display_item');
+
 // PDOを取得
 $db = get_db_connect();
 // PDOを利用してログインユーザーのデータを取得
 $user = get_login_user($db);
 
 // 商品一覧用の商品データを取得
-$items = get_open_items($db);
+$items = get_open_items($db, $display_item);
 
 $csrf_token = get_csrf_token();
 //modelから持ってくるときget_という名称、viewで使うものを変数に

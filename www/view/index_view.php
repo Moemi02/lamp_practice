@@ -9,6 +9,15 @@
 <body>
   <?php include VIEW_PATH . 'templates/header_logined.php'; ?>
   
+  <div class="select">
+    <form id="submit_form" method="get" action="index.php">
+      <select id="submit_select" name="display_item">
+        <option value="new">新着順</option>
+        <option value="asc_price">価格の安い順</option>
+        <option value="desc_price">価格の高い順</option>
+      </select>
+    </form>
+  </div>
 
   <div class="container">
     <h1>商品一覧</h1>
@@ -43,6 +52,6 @@
       </div>
     </div>
   </div>
-  
+  <script src="../www/html/assets/sort.js"></script>
 </body>
 </html>

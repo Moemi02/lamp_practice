@@ -18,7 +18,7 @@ if(is_admin($user) === false){
   redirect_to(LOGIN_URL);
 }
 
-$items = get_all_items($db);
+$items = get_all_items($db, $display_item);
 
 $csrf_token = get_csrf_token();
 //modelから持ってくるときget_という名称、viewで使うものを変数に
