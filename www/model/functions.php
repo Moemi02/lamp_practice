@@ -10,18 +10,18 @@ function redirect_to($url){
   exit;
 }
 
-function get_get($name){
+function get_get($name, $default = ''){
   if(isset($_GET[$name]) === true){
     return $_GET[$name];
   };
-  return '';
+  return $default; 
 }
 
-function get_post($name){
+function get_post($name, $default = ''){
   if(isset($_POST[$name]) === true){
     return $_POST[$name];
   };
-  return '';
+  return $default;
 }
 
 function get_file($name){
