@@ -52,6 +52,6 @@
       </div>
     </div>
   </div>
-  <script src="../www/html/assets/sort.js"></script>
+  <script src="assets/sorts.js"></script>
 </body>
 </html>

@@ -22,7 +22,7 @@ function get_item($db, $item_id){
   return fetch_query($db, $sql, $params);
 }
 
-function get_items($db, $display_item, $is_open = false){
+function get_items($db, $is_open = false, $display_item = 'new'){
   $sql = '
     SELECT
       item_id, 
@@ -57,12 +57,12 @@ function get_items($db, $display_item, $is_open = false){
   return fetch_all_query($db, $sql);
 }
 
-function get_all_items($db, $display_item){
-  return get_items($db, $display_item);
+function get_all_items($db){
+  return get_items($db);
 }
 
-function get_open_items($db, $display_item){
-  return get_items($db, $display_item, true);
+function get_open_items($db, $display_item = 'new'){
+  return get_items($db, true, $display_item);
 }
 
 function regist_item($db, $name, $price, $stock, $status, $image){

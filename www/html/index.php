@@ -17,8 +17,8 @@ if(is_logined() === false){
   redirect_to(LOGIN_URL);
 }
 
-// 商品の並び替えデータを取得
-$display_item = get_get('display_item');
+// 商品の並び替えデータを取得,第二引数
+$display_item = get_get('display_item','new');
 
 // PDOを取得
 $db = get_db_connect();
